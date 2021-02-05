@@ -6,9 +6,10 @@ WORKDIR /app
 RUN apt-get -y update && apt-get -y upgrade && apt-get -y install nodejs
 
 # Install app dependencies
-COPY Makefile py ./
-
+COPY Makefile ./
+COPY py ./py/
+RUN find ./  
 RUN make setup
 
 EXPOSE 5000
-CMD cd py && . venv/bin/activate && python3 ____PROGRAM_webserver.py
+CMD . venv/bin/activate && cd py && python3 ____PROGRAM_webserver.py

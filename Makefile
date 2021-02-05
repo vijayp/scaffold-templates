@@ -1,12 +1,12 @@
 # Simple makefile that has a bunch of stuff that we care about.
 venv-setup:
-	cd py && python3 -m venv venv && . venv/bin/activate && pip install --upgrade pip && pwd && pip install -r requirements.txt
+	/usr/bin/env python3 -m venv venv && . venv/bin/activate && pip install --upgrade pip && pwd && pip install -r py/requirements.txt
 
 venv-freeze:
-	cd py && . venv/bin/activate && pip freeze > requirements.txt
+	. venv/bin/activate && pip freeze > py/requirements.txt
 
 venv-clean:
-	cd py && rm -rf venv
+	rm -rf venv
 
 # 1. you can run all tests with "make test"
 test:
