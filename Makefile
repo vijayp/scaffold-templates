@@ -17,10 +17,14 @@ test:
 docker-build:
 	docker build -t program/webserver:1.0 .
 
-docker-run-webserver:
+run-webserver-docker:
 	docker run -p 5000:5000 -it program/webserver:1.0 
 
-docker-webserver: docker-build docker-run-webserver
+run-docker-webserver: docker-build run-webserver-docker
+
+run-local-webserver:
+	. venv/bin/activate && cd py && python3 ____PROGRAM_webserver.py
+
 
 setup: venv-setup
 all: test
