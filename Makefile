@@ -14,8 +14,15 @@ test:
 
 
 # 2. you can create a docker file with make docker
-docker:
-	docker build .
+docker-build:
+	docker build -t program/webserver:1.0 .
+
+docker-run-webserver:
+	docker run -it program/webserver:1.0 
+
+docker-webserver:
+	docker-build
+	docker-run-webserver
 
 setup: venv-setup
 all: test
