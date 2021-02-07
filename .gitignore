@@ -1,5 +1,7 @@
 # node modules
 node_modules/
+# serverless stuff
+.serverless/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
