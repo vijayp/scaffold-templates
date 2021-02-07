@@ -12,6 +12,7 @@ from wtforms import DecimalField, RadioField, SubmitField
 from wtforms.validators import DataRequired
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'this_is_bad'
 
 class ActionForm(FlaskForm):
     lval = DecimalField('lval', validators=[DataRequired()])

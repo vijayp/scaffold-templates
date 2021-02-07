@@ -1,0 +1,12 @@
+npm install -g serverless
+npm install --save-dev serverless-wsgi serverless-python-requirements
+aws configure
+https://console.aws.amazon.com/iam/home#/users$new?step=details
+permissions to grant the AWS person
+  IAMFullAccess
+  AmazonS3FullAccess
+  AmazonAPIGatewayInvokeFullAccess
+  CloudWatchFullAccess
+  AmazonAPIGatewayAdministrator
+  AWSCloudFormationFullAccess
+  AWSLambda_FullAccess
