@@ -25,6 +25,11 @@ run-docker-webserver: docker-build run-webserver-docker
 run-local-webserver:
 	. venv/bin/activate && cd py && python3 ____PROGRAM_webserver.py
 
+serverless-setup:
+	cd py && \
+	npm install serverless && \
+	npm install --save-dev serverless-wsgi serverless-python-requirements && \
+	aws configure
 
-setup: venv-setup
+setup: venv-setup serverless-setup
 all: test
