@@ -3,6 +3,9 @@ import re
 import shutil
 import sys
 import os
+import tempfile
+
+import git
 # ensure that anything we substitute is only composed of 
 # letters, numbers, or _
 VALID_EXPRESSION = re.compile('^[0-9A-Za-z_]+$')
@@ -55,7 +58,7 @@ def copytree_with_substitutions(from_dir, to_dir, template_dict):
 
     # 1. recursively copy all files from from_dir to to_dir,
     #    renaming files as we go
-    shutil.copytree(src=from_dir, dst=to_dir, copy_function=copy2_substitute)
+    shutil.copytree(src=from_dir, dst=to_dir, copy_function=copy2_substitute, dirs_exist_ok=True)
 
     # 2. for each file in the new directory, in-place replace the contents of the file
     for subdir, dirs, files in os.walk(to_dir):
@@ -63,7 +66,6 @@ def copytree_with_substitutions(from_dir, to_dir, template_dict):
             # TODO: large files might break this 
             # TODO: this is O(n^m) for file size n and with m substitutions. Super inefficient
             fn = os.path.join(subdir, basename)
-            print(fn)
             with open(fn, 'r') as fd:
                 try:
                     data = fd.read()
@@ -74,9 +76,29 @@ def copytree_with_substitutions(from_dir, to_dir, template_dict):
             with open(fn, 'w') as fd:
                 fd.write(substitute_in_string(data))
 
+def make_git_repo(location, program_name):
+    assert is_valid_expression(program_name)
+    repo = git.Repo.init(location)
+    repo.git.add(all=True)
+    repo.git.commit('-m', 'Initial commit for program %s, made by kickstart' % program_name, author='Kickstart Bot <bot@kickstartbio.com>')
+
+    # clean up unnecessary files
+    repo.git.clean('-xdf')
+
+def make_zip_file(tree, zipfile_name):
+    ''' this creates a NEW zipfile called zipfile_name, with the contents of tree in it. '''
+    shutil.make_archive(zipfile_name, 'zip', tree)
 
 if __name__ == '__main__':
     program_name = sys.argv[1]
     olddir = sys.argv[2]
-    newdir = sys.argv[3]
-    copytree_with_substitutions(olddir, newdir, {'____PROGRAM' : program_name})
+    with tempfile.TemporaryDirectory() as working_dir:
+        substitutions = {'____PROGRAM' : program_name}
+        assert is_valid_expression(program_name)
+        newdir = os.path.join(working_dir, program_name)
+        copytree_with_substitutions(olddir, newdir, substitutions)
+        make_git_repo(newdir, program_name)
+        tmpdirname = sys.argv[3]
+        zipfile_name = os.path.join(tmpdirname, program_name)
+        make_zip_file(working_dir, zipfile_name)
+        print('wrote %s.zip' % zipfile_name)
