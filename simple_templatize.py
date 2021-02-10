@@ -22,12 +22,12 @@ def copytree_with_substitutions(from_dir, to_dir, template_dict):
     # make sure we're not substituting anything strange
     for v in template_dict.values():
         if not is_valid_expression(v):
-            raise TypeError('%s is not a valid expression for substitution', v)
+            raise TypeError('%s is not a valid expression for substitution' % v)
 
     # make sure we're not missing any required parameters
     missing_required = REQUIRED_PARAMS - set(template_dict.keys())
     if missing_required:
-        raise TypeError('missing required params: %s', ','.join(missing_required))
+        raise TypeError('missing required params: %s' % (','.join(missing_required)))
     
     # copy optional params
     for param in OPTIONAL_PARAMS:
